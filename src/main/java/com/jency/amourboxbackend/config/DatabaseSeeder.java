@@ -3,9 +3,11 @@ package com.jency.amourboxbackend.config;
 import com.jency.amourboxbackend.model.Capsule;
 import com.jency.amourboxbackend.model.Coupon;
 import com.jency.amourboxbackend.model.Memory;
+import com.jency.amourboxbackend.model.ScratchCard;
 import com.jency.amourboxbackend.repository.CapsuleRepository;
 import com.jency.amourboxbackend.repository.CouponRepository;
 import com.jency.amourboxbackend.repository.MemoryRepository;
+import com.jency.amourboxbackend.repository.ScratchCardRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +18,12 @@ import java.time.LocalDate;
 public class DatabaseSeeder {
 
     @Bean
-    CommandLineRunner initDatabase(CapsuleRepository capsuleRepository, CouponRepository couponRepository, MemoryRepository memoryRepository) {
+    CommandLineRunner initDatabase(
+            CapsuleRepository capsuleRepository,
+            CouponRepository couponRepository,
+            MemoryRepository memoryRepository,
+            ScratchCardRepository scratchCardRepository // 👈 Added ScratchCardRepository here
+    ) {
         return args -> {
             // Seed Capsules if empty
             if (capsuleRepository.count() == 0) {
@@ -47,8 +54,10 @@ public class DatabaseSeeder {
                 c3.setRedeemed(false);
                 couponRepository.save(c3);
 
-                System.out.println("✅ Coupon seed data loaded into Docker PostgreSQL successfully!");
+                System.out.println("✅ Coupon seed data loaded into PostgreSQL successfully!");
             }
+
+            // Seed Memories if empty
             if (memoryRepository.count() == 0) {
                 Memory m1 = new Memory();
                 m1.setTitle("The Day We Met ☕");
@@ -65,6 +74,19 @@ public class DatabaseSeeder {
                 memoryRepository.save(m2);
 
                 System.out.println("✅ Memory timeline data seeded successfully into PostgreSQL!");
+            }
+
+            // 🌟 Seed Scratch Cards if empty
+            if (scratchCardRepository.count() == 0) {
+                ScratchCard s1 = new ScratchCard("Remember when we laughed so hard on our first date? I love you! ❤️", "MEMORY");
+                ScratchCard s2 = new ScratchCard("One free giant hug valid anytime today! 🤗", "LOVE");
+                ScratchCard s3 = new ScratchCard("Dinner date at your favorite spot on me! 🍕", "DATE");
+
+                scratchCardRepository.save(s1);
+                scratchCardRepository.save(s2);
+                scratchCardRepository.save(s3);
+
+                System.out.println("✅ ScratchCard pool data seeded successfully into PostgreSQL!");
             }
 
         };
